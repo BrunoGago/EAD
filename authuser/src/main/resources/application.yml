@@ -1,0 +1,29 @@
+server:
+  port: 8082
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  jmx:
+    enabled: false
+  datasource:
+    username: postgres
+    password: T@ider1398
+    url: jdbc:postgresql://localhost:5432/ead-authuser
+  output:
+    ansi:
+      enabled: Always
+
+#Configuração do Log para TRACE, visto que INFO é o default
+logging:
+  level:
+    com.ead: TRACE
+    root: INFO #Seta o padrão para todo o framework como INFO, DEBUG, etc
+    org.springframework.web: DEBUG
+    org.hibernate: INFO

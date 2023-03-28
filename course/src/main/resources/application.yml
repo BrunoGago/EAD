@@ -1,0 +1,18 @@
+server:
+  port: 8083
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  jmx:
+    enabled: false
+  datasource:
+    username: postgres
+    password: T@ider1398
+    url: jdbc:postgresql://localhost:5432/ead-course
