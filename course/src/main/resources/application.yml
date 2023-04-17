@@ -16,3 +16,9 @@ spring:
     username: postgres
     password: T@ider1398
     url: jdbc:postgresql://localhost:5432/ead-course
+
+#definição do endereço de AuthUser para comunicação síncrona entre os microserviços
+ead:
+  api:
+    url:
+      authuser: 'http://localhost:8082'
