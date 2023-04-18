@@ -1,10 +1,9 @@
-package com.ead.course.clients;
+package com.ead.authuser.clients;
 
-import com.ead.course.dto.ResponsePageDto;
-import com.ead.course.dto.UserDto;
-import com.ead.course.services.UtilsServices;
+import com.ead.authuser.dtos.CourseDto;
+import com.ead.authuser.dtos.ResponsePageDto;
+import com.ead.authuser.services.UtilsServices;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -30,26 +29,26 @@ public class CourseClient {
     @Autowired
     UtilsServices utilsServices;
 
-    @Value("${ead.api.url.authuser}")
-    String REQUEST_URI;
+    @Value("${ead.api.url.course}")
+    String REQUEST_URL_COURSE;
 
-    public Page<UserDto> getAllUsersByCourse(UUID courseId, Pageable pageable){
-        List<UserDto> searchResult = null;
-        String url = utilsServices.createUrl(courseId, pageable);
+    public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable){
+        List<CourseDto> searchResult = null;
+        ResponseEntity<ResponsePageDto<CourseDto>> result = null;
+        String url = REQUEST_URL_COURSE + utilsServices.createUrlGetAllCoursesByUser(userId, pageable);
         log.debug("Request URL: {} ", url);
         log.info("Request URL: {} ", url);
         try{
-            ParameterizedTypeReference<ResponsePageDto<UserDto>> responseType = new ParameterizedTypeReference<ResponsePageDto<UserDto>>() {};
+            ParameterizedTypeReference<ResponsePageDto<CourseDto>> responseType = new ParameterizedTypeReference<ResponsePageDto<CourseDto>>() {};
 
             //Utilizado para fazer a comunicação entre o AuthUser com Course, através do método GET do HTTP
-            ResponseEntity<ResponsePageDto<UserDto>> result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
+            result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
             searchResult = result.getBody().getContent();
             log.debug("Response Number of Elements: {} ", searchResult.size());
+        } catch (HttpStatusCodeException e){
+            log.error("Error request /courses {} ", e);
         }
-        catch (HttpStatusCodeException e){
-            log.error("Error request /users {} ", e);
-        }
-        log.info("Ending request /users courseId {} ", courseId);
-        return new PageImpl<>(searchResult);
+        log.info("Ending request /courses userId {} ", userId);
+        return result.getBody();
     }
 }

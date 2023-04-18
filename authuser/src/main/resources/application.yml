@@ -27,3 +27,9 @@ logging:
     root: INFO #Seta o padrão para todo o framework como INFO, DEBUG, etc
     org.springframework.web: DEBUG
     org.hibernate: INFO
+
+#definição do endereço de Course para comunicação síncrona entre os microserviços
+ead:
+  api:
+    url:
+      course: 'http://localhost:8083'
