@@ -1,8 +1,8 @@
-## EAD - Educational system (distance learning) using microservice architecture
+# EAD - Educational system (distance learning) using microservice architecture
 
 This project demonstrates the implementation of microservices architecture. 
 
-# Technologies
+## Technologies
 Spring Boot 2.5 and 3.0 (updated)
 Spring Security
 JSON Web Tokens (JWT)
@@ -11,13 +11,13 @@ Spring Framework
 Postgres
 Maven
 
-# Getting Started
+## Getting Started
 To get started with this project, you will need to have the following installed on your local machine:
 
 JDK 11+
 Maven 3+
 
-# To build and run the project, follow these steps:
+## To build and run the project, follow these steps:
 
 Clone the repository: git clone https://github.com/BrunoGago/EAD.git
 Navigate to the project directory
