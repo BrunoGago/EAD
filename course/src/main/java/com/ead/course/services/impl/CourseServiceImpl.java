@@ -1,5 +1,6 @@
 package com.ead.course.services.impl;
 
+import com.ead.course.clients.AuthUserClient;
 import com.ead.course.models.CourseModel;
 import com.ead.course.models.CourseUserModel;
 import com.ead.course.models.LessonModel;
@@ -10,6 +11,7 @@ import com.ead.course.repositories.LessonRepository;
 import com.ead.course.repositories.ModuleRepository;
 import com.ead.course.services.CourseService;
 import com.ead.course.specifications.SpecificationTemplate;
+import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,9 +38,15 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     CourseUserRepository courseUserRepository;
 
+    @Autowired
+    AuthUserClient authUserClient;
+
     @Transactional//Fará tudo dentro de uma transação e se der errado, volta como estava
     @Override
     public void delete(CourseModel courseModel) {
+        //variável utilizada para verificar a necessidade de deletar um curso se tiver um user relacionado
+        boolean deleteCourseUserInAuthUser = false;
+
         List<ModuleModel> moduleModelList = moduleRepository.findAllModulesIntoCourse(courseModel.getCourseId());//Obtém a listagem de módulos por curso
         if(!moduleModelList.isEmpty()){
             for(ModuleModel module : moduleModelList){
@@ -52,8 +60,15 @@ public class CourseServiceImpl implements CourseService {
         List<CourseUserModel> courseUserModelList = courseUserRepository.findAllCourseUserIntoCourse(courseModel.getCourseId());
         if(!courseUserModelList.isEmpty()){
             courseUserRepository.deleteAll(courseUserModelList);
+            /*se courseUserModelList retornar um algum valor, quer dizer que há um course para um user, então a deleção deve
+             *ser feita em ambos microservices
+             */
+            deleteCourseUserInAuthUser = true;
         }
         courseRepository.delete(courseModel);//deleta o curso que está sendo passado no parâmetro
+        if(deleteCourseUserInAuthUser){
+            authUserClient.deleteCourseInAuthUser(courseModel.getCourseId());
+        }
     }
 
     @Override

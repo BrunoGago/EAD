@@ -5,13 +5,10 @@ import com.ead.course.dto.ResponsePageDto;
 import com.ead.course.dto.UserDto;
 import com.ead.course.services.UtilsServices;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.User;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -68,5 +65,10 @@ public class AuthUserClient {
         courseUserDto.setUserId(userId);
         courseUserDto.setCourseId(courseId);
         restTemplate.postForObject(url, courseUserDto, String.class);
+    }
+
+    public void deleteCourseInAuthUser(UUID courseId) {
+        String url = REQUEST_URL_AUTHUSER + "/users/courses/" + courseId; //URI definida dentro de CourseController
+        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class); //envia a requisição para AuthUser
     }
 }

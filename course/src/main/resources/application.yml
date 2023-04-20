@@ -26,7 +26,7 @@ spring:
 ead:
   api:
     url:
-      authuser: 'http://ead-authuser-service'
+      authuser: 'http://ead-authuser-service/ead-authuser' #passei o ID do Eureka e o context-path
 
 eureka:
   client:
