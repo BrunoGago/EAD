@@ -8,6 +8,8 @@ Spring Security
 JSON Web Tokens (JWT)
 BCrypt
 Spring Framework
+Spring Cloud
+Eureka Server
 Postgres
 Maven
 
@@ -16,6 +18,8 @@ To get started with this project, you will need to have the following installed 
 
 JDK 11+
 Maven 3+
+Lombok
+
 
 ## To build and run the project, follow these steps:
 
