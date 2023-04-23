@@ -1,6 +1,6 @@
 package com.ead.course.controllers;
 
-import com.ead.course.dto.LessonDto;
+import com.ead.course.dtos.LessonDto;
 import com.ead.course.models.LessonModel;
 import com.ead.course.models.ModuleModel;
 import com.ead.course.services.LessonService;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

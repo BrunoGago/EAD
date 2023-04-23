@@ -1,4 +1,4 @@
-package com.ead.course.dto;
+package com.ead.course.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

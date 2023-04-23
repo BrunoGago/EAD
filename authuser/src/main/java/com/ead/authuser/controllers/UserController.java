@@ -13,21 +13,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Log4j2
 @RestController
@@ -40,14 +35,8 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec,
-                                                       @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
-                                                       @RequestParam(required = false) UUID courseId){
-        Page<UserModel> userModelPage = null;
-        if(courseId != null){
-            userModelPage = userService.findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable);
-        } else {
-            userModelPage = userService.findAll(spec, pageable);
-        }
+                                                       @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable){
+        Page<UserModel> userModelPage = userService.findAll(spec, pageable);
         /*Verifica se a lista de usuários está preenchida e, caso positivo, irá aplicar o Hateos para cada idem retornado
          *1- Ao percorrer a lista de usuários (UserModel) do banco, aplicamos os métodos de Hateos "add", "linkTo", "methodOn".
          *2- LinkTo: Mapeia qual o controller que vai ter a solicitação

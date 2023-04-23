@@ -1,4 +1,4 @@
-package com.ead.authuser.validation;
+package com.ead.authuser.validations;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

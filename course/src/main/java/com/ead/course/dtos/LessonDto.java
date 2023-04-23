@@ -1,4 +1,4 @@
-package com.ead.course.dto;
+package com.ead.course.dtos;
 
 import lombok.Data;
 
