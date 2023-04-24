@@ -28,6 +28,9 @@ spring:
   rabbitmq:
     addresses: amqps://ukutjcsw:9PA1G6yANv6SylwjCluGIFpO2ylCaEEF@fly.rmq.cloudamqp.com/ukutjcsw
 
+  rabbitmq:
+    addresses: amqps://ukutjcsw:9PA1G6yANv6SylwjCluGIFpO2ylCaEEF@fly.rmq.cloudamqp.com/ukutjcsw
+
 #Configuração do Log para TRACE, visto que INFO é o default
 logging:
   level:
