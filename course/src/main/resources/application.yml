@@ -20,13 +20,16 @@ spring:
   datasource:
     username: postgres
     password: T@ider1398
-    url: jdbc:postgresql://localhost:5432/ead-course
+    url: jdbc:postgresql://localhost:5432/ead-course-v2
+
+  rabbitmq:
+    addresses: amqps://ukutjcsw:9PA1G6yANv6SylwjCluGIFpO2ylCaEEF@fly.rmq.cloudamqp.com/ukutjcsw
 
 #definição do endereço de AuthUser para comunicação síncrona entre os microserviços
 ead:
   api:
     url:
-      authuser: 'http://ead-authuser-service/ead-authuser' #passei o ID do Eureka e o context-path
+      authuser: 'http://ead-authuser-service/ead-authuser-v2' #passei o ID do Eureka e o context-path
 
 eureka:
   client:
