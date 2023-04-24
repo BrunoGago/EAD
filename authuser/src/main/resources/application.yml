@@ -20,10 +20,13 @@ spring:
   datasource:
     username: postgres
     password: T@ider1398
-    url: jdbc:postgresql://localhost:5432/ead-authuser
+    url: jdbc:postgresql://localhost:5432/ead-authuser-v2
   output:
     ansi:
       enabled: Always
+#RabbitMQ configuração
+  rabbitmq:
+    addresses: amqps://ukutjcsw:9PA1G6yANv6SylwjCluGIFpO2ylCaEEF@fly.rmq.cloudamqp.com/ukutjcsw
 
 #Configuração do Log para TRACE, visto que INFO é o default
 logging:
@@ -37,7 +40,7 @@ logging:
 ead:
   api:
     url:
-      course: 'http://ead-course-service/ead-course'
+      course: 'http://ead-course-service/ead-course-v2'
 
 eureka:
   client:
