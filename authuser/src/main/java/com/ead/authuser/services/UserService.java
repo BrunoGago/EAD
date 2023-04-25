@@ -1,7 +1,6 @@
 package com.ead.authuser.services;
 
 import com.ead.authuser.models.UserModel;
-import com.ead.authuser.specifications.SpecificationTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,11 +22,13 @@ public interface UserService {
 
     void delete(UserModel userModel);
 
-    void save(UserModel userModel);
+    UserModel save(UserModel userModel);
 
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
 
     Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
+
+    UserModel saveUser(UserModel userModel);
 }

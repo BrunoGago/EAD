@@ -28,9 +28,6 @@ spring:
   rabbitmq:
     addresses: amqps://ukutjcsw:9PA1G6yANv6SylwjCluGIFpO2ylCaEEF@fly.rmq.cloudamqp.com/ukutjcsw
 
-  rabbitmq:
-    addresses: amqps://ukutjcsw:9PA1G6yANv6SylwjCluGIFpO2ylCaEEF@fly.rmq.cloudamqp.com/ukutjcsw
-
 #Configuração do Log para TRACE, visto que INFO é o default
 logging:
   level:
@@ -44,6 +41,10 @@ ead:
   api:
     url:
       course: 'http://ead-course-service/ead-course-v2'
+#Definição de Broker RabbitMQ para EAD do tipo "fanout"
+  broker:
+    exchange:
+      userEvent: ead.userenvent #nome do exchange
 
 eureka:
   client:

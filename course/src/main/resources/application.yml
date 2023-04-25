@@ -21,7 +21,7 @@ spring:
     username: postgres
     password: T@ider1398
     url: jdbc:postgresql://localhost:5432/ead-course-v2
-
+#RabbitMQ configuração
   rabbitmq:
     addresses: amqps://ukutjcsw:9PA1G6yANv6SylwjCluGIFpO2ylCaEEF@fly.rmq.cloudamqp.com/ukutjcsw
 

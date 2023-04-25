@@ -61,7 +61,7 @@ public class AuthenticationController {
         userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
 
-        userService.save(userModel);
+        userService.saveUser(userModel);//utiliza o novo saveUser para usar a exchange e publicar que um user foi criado
 
         //Gera os logs com LOG4J2
         log.debug("POST registerUser userId saved {}", userModel.getUserId());
