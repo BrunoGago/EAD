@@ -44,7 +44,7 @@ ead:
 #Definição de Broker RabbitMQ para EAD do tipo "fanout"
   broker:
     exchange:
-      userEvent: ead.userenvent #nome do exchange
+      userEvent: ead.userevent #nome do exchange
 
 eureka:
   client:

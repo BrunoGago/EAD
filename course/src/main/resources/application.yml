@@ -30,6 +30,12 @@ ead:
   api:
     url:
       authuser: 'http://ead-authuser-service/ead-authuser-v2' #passei o ID do Eureka e o context-path
+  broker:
+    exchange:
+      userEventExchange: ead.userevent #definição do exchange de authuser
+    queue: #fila que course vai estar "escutando" quando o publisher enviar para o exchange conectado a ele
+      userEventQueue:
+        name: ead.userevent.ms.course
 
 eureka:
   client:
