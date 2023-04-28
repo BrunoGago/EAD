@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserModel saveUser(UserModel userModel){
-        userModel = save(userModel);//salva o usuario
+        userModel = save(userModel);
         userEventPublisher.publishUserEvent(userModel.convertToUserEventDto(), ActionType.CREATE);
         return userModel;
     }

@@ -63,4 +63,11 @@ public class CourseModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)//Vai utilizar o fetch lazy para obeter os dados como definido anteriormente. Caso não seja definido, o JPA utiliza como default o JOIN (EAGER)
     //@OnDelete(action = OnDeleteAction.CASCADE)//A deleção é feita pelo banco de dados, assim, o BD vai deletar os módules que estão associados com um curso
     private Set<ModuleModel> modules;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(    name = "TB_COURSES_USERS",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<UserModel> users;
 }

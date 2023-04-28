@@ -6,7 +6,6 @@ server:
 spring:
   application:
     name: ead-course-service
-
   jpa:
     show-sql: true
     hibernate:
@@ -14,7 +13,6 @@ spring:
     properties:
       hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-
   jmx:
     enabled: false
   datasource:
@@ -23,13 +21,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/ead-course-v2
 #RabbitMQ configuração
   rabbitmq:
-    addresses: amqps://ukutjcsw:9PA1G6yANv6SylwjCluGIFpO2ylCaEEF@fly.rmq.cloudamqp.com/ukutjcsw
+    addresses: amqps://ukutjcsw:8Qn949EsBJb0x5az9blX_u0pcW8WFVyA@fly.rmq.cloudamqp.com/ukutjcsw
 
 #definição do endereço de AuthUser para comunicação síncrona entre os microserviços
 ead:
   api:
     url:
-      authuser: 'http://ead-authuser-service/ead-authuser-v2' #passei o ID do Eureka e o context-path
+      authuser: 'http://ead-authuser-service/ead-authuser' #passei o ID do Eureka e o context-path
   broker:
     exchange:
       userEventExchange: ead.userevent #definição do exchange de authuser

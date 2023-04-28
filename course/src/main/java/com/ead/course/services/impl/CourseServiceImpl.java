@@ -6,6 +6,7 @@ import com.ead.course.models.ModuleModel;
 import com.ead.course.repositories.CourseRepository;
 import com.ead.course.repositories.LessonRepository;
 import com.ead.course.repositories.ModuleRepository;
+import com.ead.course.repositories.UserRepository;
 import com.ead.course.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,9 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     LessonRepository lessonRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Transactional//Fará tudo dentro de uma transação e se der errado, volta como estava
     @Override
     public void delete(CourseModel courseModel) {
@@ -48,7 +52,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseModel save(CourseModel courseModel) {
-
         return courseRepository.save(courseModel);
     }
 
@@ -60,6 +63,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Page<CourseModel> findAll(Specification<CourseModel> spec, Pageable pageable) {
         return courseRepository.findAll(spec, pageable);
+    }
 
+    @Override
+    public boolean existsByCourseAndUser(UUID courseId, UUID userId) {
+        return courseRepository.existsByCourseAndUser(courseId, userId);
+    }
+
+    @Transactional
+    @Override
+    public void saveSubscriptionUserInCourse(UUID courseId, UUID userId) {
+        courseRepository.saveCourseUser(courseId, userId);
     }
 }

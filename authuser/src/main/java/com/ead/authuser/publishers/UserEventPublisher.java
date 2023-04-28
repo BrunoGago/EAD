@@ -21,7 +21,5 @@ public class UserEventPublisher {
     public void publishUserEvent(UserEventDto userEventDto, ActionType actionType){
         userEventDto.setActionType(actionType.toString());//conversão do ENUM para string;
         rabbitTemplate.convertAndSend(exchangeUserEvent, "", userEventDto);//passei routingKey vazia pois todas as filas eram escutar essa exchange
-
     }
-
 }

@@ -17,19 +17,18 @@ import java.util.UUID;
 public class UserDto {
 
     //Interfaces responsáveis por habilitar o JsonView de cada varíavel do DTO
-    public interface UserView{
-        public static interface RegistrationPost{}
-        public static interface UserPut{}
-        public static interface PasswordPut{}
-        public static interface ImagePut{}
-    }
 
-    private UUID userId;
+    public interface UserView {
+        public static interface RegistrationPost {}
+        public static interface UserPut {}
+        public static interface PasswordPut {}
+        public static interface ImagePut {}
+    }
 
     @NotBlank(groups = UserView.RegistrationPost.class)
     @Size(min = 4, max = 50, groups = UserView.RegistrationPost.class)
     @UsernameConstraint(groups = UserView.RegistrationPost.class)
-    @JsonView(UserView.RegistrationPost.class)//Username não poderá ser alterado, assim, somente no cadastro o username poderá ser criado
+    @JsonView(UserView.RegistrationPost.class)
     private String username;
 
     @NotBlank(groups = UserView.RegistrationPost.class)
@@ -44,11 +43,12 @@ public class UserDto {
 
     @NotBlank(groups = UserView.PasswordPut.class)
     @Size(min = 6, max = 20, groups = UserView.PasswordPut.class)
-    @JsonView(UserView.PasswordPut.class)
+    @JsonView({UserView.PasswordPut.class})
     private String oldPassword;
 
     @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
     private String fullName;
+
     @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
     private String phoneNumber;
 
@@ -57,6 +57,6 @@ public class UserDto {
     private String cpf;
 
     @NotBlank(groups = UserView.ImagePut.class)
-    @JsonView(UserView.ImagePut.class)
+    @JsonView({UserView.ImagePut.class})
     private String imageUrl;
 }
