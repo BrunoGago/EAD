@@ -26,7 +26,7 @@ public class UserConsumer {
      */
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "${ead.broker.queue.userEventQueue.name}", durable = "true"),
-            exchange = @Exchange(value = "${ead.broker.exchange.userEventExchange}", type = ExchangeTypes.FANOUT, ignoreDeclarationExceptions = "true")
+            exchange = @Exchange(value = "${ead.broker.exchange.userEventExchange}", type = ExchangeTypes.FANOUT, ignoreDeclarationExceptions = "true", durable = "true")
     ))
     public void listenUserEvent(@Payload UserEventDto userEventDto){
         //o UserModel que virá de authUser, via mensageria, será convertido de UserEventDto para UserModel de Course

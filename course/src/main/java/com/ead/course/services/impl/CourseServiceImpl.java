@@ -47,6 +47,8 @@ public class CourseServiceImpl implements CourseService {
             }
             moduleRepository.deleteAll(moduleModelList);//deleta os módulos lincados a cada curso
         }
+        //deleta cursos com relação a um usuário e dentro de UserServiceImpl fiz o delete de user por course
+        courseRepository.deleteCourseUserByCourse(courseModel.getCourseId());
         courseRepository.delete(courseModel);//deleta o curso que está sendo passado no parâmetro
     }
 

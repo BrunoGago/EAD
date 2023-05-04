@@ -14,6 +14,8 @@ spring:
     properties:
       hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob.non-contextual-creation: true
 
   jmx:
     enabled: false
@@ -26,7 +28,10 @@ spring:
       enabled: Always
   #RabbitMQ configuração
   rabbitmq:
-    addresses: amqps://ukutjcsw:8Qn949EsBJb0x5az9blX_u0pcW8WFVyA@fly.rmq.cloudamqp.com/ukutjcsw
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
 
 #Configuração do Log para TRACE, visto que INFO é o default
 logging:

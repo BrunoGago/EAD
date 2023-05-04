@@ -1,6 +1,7 @@
 package com.ead.course.services.impl;
 
 import com.ead.course.models.UserModel;
+import com.ead.course.repositories.CourseRepository;
 import com.ead.course.repositories.UserRepository;
 import com.ead.course.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CourseRepository courseRepository;
 
 
     @Override
@@ -29,8 +34,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(userModel);
     }
 
+    @Transactional
     @Override
     public void delete(UUID userId) {
+        courseRepository.deleteCourseUserByUser(userId);//deleta o user que tem relação na tabela Courses_Users
         userRepository.deleteById(userId);
     }
 

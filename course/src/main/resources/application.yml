@@ -21,7 +21,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/ead-course-v2
 #RabbitMQ configuração
   rabbitmq:
-    addresses: amqps://ukutjcsw:8Qn949EsBJb0x5az9blX_u0pcW8WFVyA@fly.rmq.cloudamqp.com/ukutjcsw
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
 
 #definição do endereço de AuthUser para comunicação síncrona entre os microserviços
 ead:
