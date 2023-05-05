@@ -59,6 +59,15 @@ eureka:
     hostname: localhost
 
 resilience4j:
+  circuitbreaker:  #Configuração circuitBreaker para Authuser, visto que ele chama os outros microserviços
+    instances:
+      circuitbreakerInstance:
+        slidingWindowSize: 30 #30 segundos de janela de verificação
+        permittedNumberOfCallsInHalfOpenState: 2 #Durante 2 solicitações ficará no estado meio aberto para verificar se o MS voltou a responder, se falhar, volta pro aberto, caso contrário volta pro fechado
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 2 #A partir de 2 chamadas a taxa de falhas será iniciada
+        waitDurationInOpenState: 30s #Fica 30s em estado aberto "devolve erro ou mensagem default e não vai até o MS com problema, impedindo a sobrecarga no MS com erro
+        failureRateThreshold: 80 #taxa de falha em 80% do tempo setado (nos 30 seg) - para assim ir de fechado para aberto
   retry: #Configurações do retry, que visa tentar novamente por um número de tentativas e tempo de duração
     instances: #instâncias de configuração, no caso, foi nomeado como "retryInstance"
       retryInstance:
