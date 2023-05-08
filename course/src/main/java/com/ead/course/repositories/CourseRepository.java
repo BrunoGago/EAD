@@ -11,20 +11,20 @@ import java.util.UUID;
 
 public interface CourseRepository extends JpaRepository<CourseModel, UUID>, JpaSpecificationExecutor<CourseModel> {
 
-    @Query(value = "select case when count(tcu) > 0 THEN true ELSE false END FROM tb_courses_users tcu WHERE tcu.course_id= :courseId and tcu.user_id= :userId;", nativeQuery = true)
+    @Query(value="select case when count(tcu) > 0 THEN true ELSE false END FROM tb_courses_users tcu WHERE tcu.course_id= :courseId and tcu.user_id= :userId",nativeQuery = true)
     boolean existsByCourseAndUser(@Param("courseId") UUID courseId, @Param("userId") UUID userId);
 
     //Como é um insert, precisa usar o @Modifying
     @Modifying
-    @Query(value = "insert into tb_courses_users values (:courseId,:userId);", nativeQuery = true)
+    @Query(value="insert into tb_courses_users values (:courseId,:userId);",nativeQuery = true)
     void saveCourseUser(@Param("courseId") UUID courseId, @Param("userId") UUID userId);
 
     @Modifying
-    @Query(value = "delete from tb_courses_users where course_id= :courseId;", nativeQuery = true)
+    @Query(value="delete from tb_courses_users where course_id= :courseId",nativeQuery = true)
     void deleteCourseUserByCourse(@Param("courseId") UUID courseId);
 
     @Modifying
-    @Query(value = "delete from tb_courses_users where user_id= :userId;", nativeQuery = true)
+    @Query(value="delete from tb_courses_users where user_id= :userId",nativeQuery = true)
     void deleteCourseUserByUser(@Param("userId") UUID userId);
 
 }
