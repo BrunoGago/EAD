@@ -1,46 +1,53 @@
-server:
-  port: 8083
-  servlet:
-    context-path: '/ead-course/'
+#server:
+#  port: 8083
+#  servlet:
+#    context-path: '/ead-course/'
 
 spring:
   application:
     name: ead-course-service
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-  jmx:
-    enabled: false
-  datasource:
-    username: postgres
-    password: T@ider1398
-    url: jdbc:postgresql://localhost:5432/ead-course-v2
-#RabbitMQ configuração
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: admin
+  config:
+    import: 'configserver:'
+  cloud:
+    config:
+      discovery:
+        serviceId: ead-config-server
 
-#definição do endereço de AuthUser para comunicação síncrona entre os microserviços
-ead:
-  api:
-    url:
-      authuser: 'http://ead-authuser-service/ead-authuser' #passei o ID do Eureka e o context-path
-  broker:
-    exchange:
-      userEventExchange: ead.userevent #definição do exchange de authuser
-    queue: #fila que course vai estar "escutando" quando o publisher enviar para o exchange conectado a ele
-      userEventQueue:
-        name: ead.userevent.ms.course
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: 'http://localhost:8761/eureka'
-  instance:
-    hostname: localhost
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#      dialect: org.hibernate.dialect.PostgreSQLDialect
+#  jmx:
+#    enabled: false
+#  datasource:
+#    username: postgres
+#    password: T@ider1398
+#    url: jdbc:postgresql://localhost:5432/ead-course-v2
+##RabbitMQ configuração
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: admin
+#    password: admin
+#
+##definição do endereço de AuthUser para comunicação síncrona entre os microserviços
+#ead:
+#  api:
+#    url:
+#      authuser: 'http://ead-authuser-service/ead-authuser' #passei o ID do Eureka e o context-path
+#  broker:
+#    exchange:
+#      userEventExchange: ead.userevent #definição do exchange de authuser
+#    queue: #fila que course vai estar "escutando" quando o publisher enviar para o exchange conectado a ele
+#      userEventQueue:
+#        name: ead.userevent.ms.course
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: 'http://localhost:8761/eureka'
+#  instance:
+#    hostname: localhost

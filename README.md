@@ -5,11 +5,11 @@ This project demonstrates the implementation of microservices architecture.
 ## Technologies
 Spring Boot 2.5 and 3.0 (updated)
 Spring Security
-JSON Web Tokens (JWT)
-BCrypt
 Spring Framework
 Spring Cloud
 Eureka Server
+Docker
+RabbitMQ
 Postgres
 Maven
 
