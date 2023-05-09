@@ -10,11 +10,16 @@ spring:
         git:
           uri: https://github.com/BrunoGago/ead-config-server-repo
           default-label: main #branch
+#Para que o microserviço possa acessar o ServiceRegistry e se cadastrar, devemos passar o abaixo
+ead:
+  serviceRegistry:
+    username: serviceregistry
+    password: 'ead123'
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: 'http://localhost:8761/eureka'
+      defaultZone: 'http://${ead.serviceRegistry.username}:${ead.serviceRegistry.password}@localhost:8761/eureka'
     instance:
       hostname: localhost
 
