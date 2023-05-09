@@ -12,6 +12,9 @@ spring:
           default-label: main #branch
 #Para que o microserviço possa acessar o ServiceRegistry e se cadastrar, devemos passar o abaixo
 ead:
+  configServer:
+    username: configserver
+    password: 'ead123cs'
   serviceRegistry:
     username: serviceregistry
     password: 'ead123'

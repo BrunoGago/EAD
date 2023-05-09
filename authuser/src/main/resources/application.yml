@@ -12,6 +12,8 @@ spring:
     config:
       discovery:
         serviceId: ead-config-server
+      username: configserver
+      password: 'ead123cs'
 #
 #  jpa:
 #    show-sql: true
