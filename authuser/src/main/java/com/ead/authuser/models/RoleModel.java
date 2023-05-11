@@ -24,11 +24,11 @@ public class RoleModel implements GrantedAuthority, Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true, length = 30)
-    private RoleType roleName;
+    private RoleType roleType;
 
     @Override
     @JsonIgnore
-    public String getAuthority(){
-        return this.roleName.toString();
+    public String getAuthority() {
+        return this.roleType.toString();
     }
 }
