@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,16 +44,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin();//abre um formulário inicial na página para que o user seja autenticado antes de acessar
     }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-//        auth.inMemoryAuthentication()
-//                .withUser("admin")
-//                .password(passwordEncoder().encode("123456"))
-//                .roles("ADMIN");
-//    }
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception{
+        return super.authenticationManagerBean();
+    }
 
 
-    //Agora a autenticação vai ser via o Usuário salvo no BD, com login e senha
+    //Agora a autenticação vai ser via o Usuário salvo no BD, com login e senha, usando o Basic Authentication
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());

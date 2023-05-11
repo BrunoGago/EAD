@@ -1,8 +1,3 @@
-#server:
-#  port: 8082
-#  servlet:
-#    context-path: '/ead-authuser/'
-
 spring:
   application:
     name: ead-authuser-service
@@ -14,70 +9,3 @@ spring:
         serviceId: ead-config-server
       username: configserver
       password: 'ead123cs'
-#
-#  jpa:
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#      dialect: org.hibernate.dialect.PostgreSQLDialect
-#      jdbc:
-#        lob.non-contextual-creation: true
-#
-#  jmx:
-#    enabled: false
-#  datasource:
-#    username: postgres
-#    password: T@ider1398
-#    url: jdbc:postgresql://localhost:5432/ead-authuser-v2
-#  output:
-#    ansi:
-#      enabled: Always
-#  #RabbitMQ configuração
-#  rabbitmq:
-#    host: localhost
-#    port: 5672
-#    username: admin
-#    password: admin
-#
-##Configuração do Log para TRACE, visto que INFO é o default
-#logging:
-#  level:
-#    com.ead: TRACE
-#    root: INFO #Seta o padrão para todo o framework como INFO, DEBUG, etc
-#    org.springframework.web: DEBUG
-#    org.hibernate: INFO
-#
-##definição do endereço de Course para comunicação síncrona entre os microserviços, utilizando o id criado no Eureka server
-#ead:
-#  api:
-#    url:
-#      course: 'http://ead-course-service/ead-course'
-#  #Definição de Broker RabbitMQ para EAD do tipo "fanout"
-#  broker:
-#    exchange:
-#      userEvent: ead.userevent #nome do exchange
-#
-#eureka:
-#  client:
-#    serviceUrl:
-#      defaultZone: 'http://localhost:8761/eureka'
-#  instance:
-#    hostname: localhost
-#
-#resilience4j:
-#  circuitbreaker:  #Configuração circuitBreaker para Authuser, visto que ele chama os outros microserviços
-#    instances:
-#      circuitbreakerInstance:
-#        slidingWindowSize: 30 #30 segundos de janela de verificação
-#        permittedNumberOfCallsInHalfOpenState: 2 #Durante 2 solicitações ficará no estado meio aberto para verificar se o MS voltou a responder, se falhar, volta pro aberto, caso contrário volta pro fechado
-#        slidingWindowType: TIME_BASED
-#        minimumNumberOfCalls: 2 #A partir de 2 chamadas a taxa de falhas será iniciada
-#        waitDurationInOpenState: 30s #Fica 30s em estado aberto "devolve erro ou mensagem default e não vai até o MS com problema, impedindo a sobrecarga no MS com erro
-#        failureRateThreshold: 80 #taxa de falha em 80% do tempo setado (nos 30 seg) - para assim ir de fechado para aberto
-#  retry: #Configurações do retry, que visa tentar novamente por um número de tentativas e tempo de duração
-#    instances: #instâncias de configuração, no caso, foi nomeado como "retryInstance"
-#      retryInstance:
-#        maxAttempts: 3
-#        waitDuration: 5s
