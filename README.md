@@ -28,3 +28,4 @@ Navigate to the project directory
 Build the project: mvn clean install
 Run the project: mvn spring-boot:run
 -> The application will be available at http://localhost:80** (82 (authuser) - 83 (course) - 84 (notification))
+-> Run a docker image of RabbitMQ in order to verify the messages throw this broker
