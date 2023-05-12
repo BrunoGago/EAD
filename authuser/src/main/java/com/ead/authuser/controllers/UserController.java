@@ -1,5 +1,7 @@
 package com.ead.authuser.controllers;
 
+import com.ead.authuser.configs.security.AuthenticationCurrentUserService;
+import com.ead.authuser.configs.security.UserDetailsImpl;
 import com.ead.authuser.dtos.UserDto;
 import com.ead.authuser.models.UserModel;
 import com.ead.authuser.services.UserService;
@@ -13,6 +15,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +39,19 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AuthenticationCurrentUserService authenticationCurrentUserService;
+
+    @PreAuthorize("hasAnyRole('STUDENT')")//definição das Roles que terão acesso exclusívo ao método abaixo e usa o Bean RoleHierarchy
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec,
-                                                       @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable){
+                                                       @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
+                                                       Authentication authentication){
+
+        //Extração do userDetails para mera visualização com debug
+        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.info("Authentication {}", userDetails.getUsername());
+
         Page<UserModel> userModelPage = userService.findAll(spec, pageable);
         /*Verifica se a lista de usuários está preenchida e, caso positivo, irá aplicar o Hateos para cada idem retornado
          *1- Ao percorrer a lista de usuários (UserModel) do banco, aplicamos os métodos de Hateos "add", "linkTo", "methodOn".
@@ -52,15 +68,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
     }
 
-    //Tendo em vista que o retorno pode ser uma resposta ou o objeto UserModel, devemos user Object como tipo do ResponseEntity
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId")UUID userId){
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if(!userModelOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
+        //Vai garantir que o usuário só acesse o seu ID e não o ID alheio
+        UUID currentUserId = authenticationCurrentUserService.getCurrentUser().getUserId();
+        if(currentUserId.equals(userId)){
+            Optional<UserModel> userModelOptional = userService.findById(userId);
+            if(!userModelOptional.isPresent()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+            } else{
+                return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
+            }
+        } else{
+            throw new AccessDeniedException("Forbidden");//403
         }
     }
 
