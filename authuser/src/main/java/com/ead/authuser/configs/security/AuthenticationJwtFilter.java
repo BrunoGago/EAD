@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 @Log4j2
 public class AuthenticationJwtFilter extends OncePerRequestFilter {
@@ -31,8 +32,9 @@ public class AuthenticationJwtFilter extends OncePerRequestFilter {
 
             //checagem se o token não está nulo ou se ainda está válido
             if (jwtStr != null && jwtProvider.validateJwt(jwtStr)) {
-                String username = jwtProvider.getUsernameJwt(jwtStr); //extraimos o username com o método declarado em Jwtprovider
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);//vai pegar o username, bater no BD com o método que criamos e ai transformar para UserDetails com o build()
+                String userId = jwtProvider.getSubjectJwt(jwtStr); //extraimos o userId com o método declarado em Jwtprovider
+
+                UserDetails userDetails = userDetailsService.loadUserById(UUID.fromString(userId));//vai pegar o userId, bater no BD com o método que criamos e ai transformar para UserDetails com o build()
                 //passa o UserDetails criado para autenticação
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -19,9 +20,17 @@ public class JwtProvider {
     private int jwtExpirationMs;
 
     public String generateJwt(Authentication authentication){
-        UserDetails userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        //Como na implementação coloquei o UUID, passei abaixo para que o JWT possa ser construido com o ID
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+
+        //Extração de Roles e abaixo passamos para o JWT
+        final String roles = userPrincipal.getAuthorities().stream()
+                .map(role -> {
+                        return role.getAuthority();}).collect(Collectors.joining(","));
+
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject((userPrincipal.getUserId().toString()))
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith((SignatureAlgorithm.HS512), jwtSecret)
@@ -29,7 +38,7 @@ public class JwtProvider {
     }
 
     //extrai o username do Jwt, passando a chave "JwtSecret", dentro de body em subject, conforme mostrado acima
-    public String getUsernameJwt(String token) {
+    public String getSubjectJwt(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
