@@ -6,5 +6,6 @@ import com.ead.authuser.models.RoleModel;
 import java.util.Optional;
 
 public interface RoleService {
-    Optional<RoleModel> findByRoleType(RoleType roleType);
+
+    Optional<RoleModel> findByRoleName(RoleType roleType);
 }

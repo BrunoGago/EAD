@@ -1,44 +1,28 @@
-package com.ead.authuser.configs.security;
+package com.ead.notification.configs.security;
 
 import io.jsonwebtoken.*;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Component
-@Log4j2
 public class JwtProvider {
+
+    Logger log = LogManager.getLogger(JwtProvider.class);
 
     @Value("${ead.auth.jwtSecret}")
     private String jwtSecret;
-    @Value("${ead.auth.jwtExpirationMs}")
-    private int jwtExpirationMs;
-
-    public String generateJwt(Authentication authentication){
-        //Como na implementação coloquei o UUID, passei abaixo para que o JWT possa ser construido com o ID
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-
-        //Extração de Roles e abaixo passamos para o JWT
-        final String roles = userPrincipal.getAuthorities().stream()
-                .map(role -> {
-                        return role.getAuthority();}).collect(Collectors.joining(","));
-
-        return Jwts.builder()
-                .setSubject((userPrincipal.getUserId().toString()))
-                .claim("roles", roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith((SignatureAlgorithm.HS512), jwtSecret)
-                .compact();
-    }
 
     //extrai o username do Jwt, passando a chave "JwtSecret", dentro de body em subject, conforme mostrado acima
     public String getSubjectJwt(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    //Método para extrair as reinvidicações
+    public String getClaimNameJwt(String token, String claimName){
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get(claimName).toString();
     }
 
     //feita a extração, vamos validar o token, retornando True ou False para a validação

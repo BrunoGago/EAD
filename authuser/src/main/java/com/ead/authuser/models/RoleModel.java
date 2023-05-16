@@ -21,14 +21,13 @@ public class RoleModel implements GrantedAuthority, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID roleId;
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true, length = 30)
-    private RoleType roleType;
+    @Column(name = "role_name",nullable = false, unique = true, length = 30)
+    private RoleType roleName;
 
     @Override
     @JsonIgnore
     public String getAuthority() {
-        return this.roleType.toString();
+        return this.roleName.toString();
     }
 }

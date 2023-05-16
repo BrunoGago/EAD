@@ -74,8 +74,8 @@ public class AuthenticationController {
 
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already taken!");
         }
-        RoleModel roleModel = roleService.findByRoleType(RoleType.ROLE_STUDENT)
-                .orElseThrow(() -> new RuntimeException("Error: Role was not found!"));
+        RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_STUDENT)
+                .orElseThrow(() -> new RuntimeException("Error: Role is Not Found."));
 
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));//Esse método recebe a senha que foi enviada "Request Body" e encripta ela
 

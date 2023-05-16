@@ -1,7 +1,10 @@
 package com.ead.authuser.controllers;
 
+import com.ead.authuser.enums.RoleType;
 import com.ead.authuser.enums.UserType;
+import com.ead.authuser.models.RoleModel;
 import com.ead.authuser.models.UserModel;
+import com.ead.authuser.services.RoleService;
 import com.ead.authuser.services.UserService;
 import com.ead.authuser.dtos.InstructorDto;
 
@@ -25,15 +28,22 @@ public class InstructorController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RoleService roleService;
+
     @PostMapping("/subscription")
     public ResponseEntity<Object> saveSubscriptionInstructor(@RequestBody @Valid InstructorDto instructorDto){
         Optional<UserModel> userModelOptional = userService.findById(instructorDto.getUserId());
         if(!userModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         } else{
+            RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_INSTRUCTOR)
+                    .orElseThrow(() -> new RuntimeException("Error: Role was not found!"));
+
             var userModel = userModelOptional.get();
             userModel.setUserType(UserType.INSTRUCTOR);
             userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+            userModel.getRoles().add(roleModel);
             userService.updateUser(userModel);//Além de atualizar o usuário, vai informar o evento na Exchange
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }
