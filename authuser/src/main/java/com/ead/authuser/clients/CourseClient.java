@@ -12,6 +12,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -37,20 +39,20 @@ public class CourseClient {
 
     //@Retry(name = "retryInstance", fallbackMethod = "retryfallback") //Retry a nível de método com as definições feitas no application.yaml
     @CircuitBreaker(name = "circuitbreakerInstance") //chama as configs do application.yaml
-    public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable){
+    public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable, String token){
         List<CourseDto> searchResult = null;
         String url = REQUEST_URL_COURSE + utilsServices.createUrlGetAllCoursesByUser(userId, pageable);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        HttpEntity<String> requestEntity = new HttpEntity<>("parameters", headers);//será passado dentro do exchange em requestEntity, assim, teremos o token do cabeçalho na comunicação sincrona
+
         log.debug("Request URL: {} ", url);
         log.info("Request URL: {} ", url);
-        System.out.println("---Start Request ao Course Microservice--");
-        try{
-            ParameterizedTypeReference<ResponsePageDto<CourseDto>> responseType = new ParameterizedTypeReference<ResponsePageDto<CourseDto>>() {};
-            ResponseEntity<ResponsePageDto<CourseDto>> result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
-            searchResult = result.getBody().getContent();
-            log.debug("Response Number of Elements: {} ", searchResult.size());
-        } catch (HttpStatusCodeException e){
-            log.error("Error request /courses {} ", e);
-        }
+        ParameterizedTypeReference<ResponsePageDto<CourseDto>> responseType = new ParameterizedTypeReference<ResponsePageDto<CourseDto>>() {};
+        ResponseEntity<ResponsePageDto<CourseDto>> result = restTemplate.exchange(url, HttpMethod.GET, requestEntity, responseType);
+        searchResult = result.getBody().getContent();
+        log.debug("Response Number of Elements: {} ", searchResult.size());
+
         log.info("Ending request /courses userId {} ", userId);
         return new PageImpl<>(searchResult);
     }
