@@ -1,7 +1,6 @@
 #configurações globais para ambientes (dev e prod)
-
 spring:
   profiles:
-    active: dev
+    active: prod
   application:
     name: ead-service-registry

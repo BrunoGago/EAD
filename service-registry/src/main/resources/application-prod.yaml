@@ -1,0 +1,21 @@
+server:
+  port: ${PORT} #Variável que o Heroku usa
+
+spring:
+  application:
+    name: ead-service-registry
+
+ead:
+  serviceRegistry:
+    username: ${EUREKA_USERNAME} #variável que será criada dentro do Heroku
+    password: ${EUREKA_PASSWORD} #variável que será criada dentro do Heroku
+
+eureka:
+  client:
+    registerWithEureka: false #Não vai se cadastrar como um cliente e sim como um servidor
+    fetchRegistry: false #não vai buscar um registro no Eureka
+    serviceUrl:
+      defaultZone: ${EUREKA_URL} #variável dentro do Heroku
+  instance:
+    hostname: ${APP_DOMAIN_NAME} #variável de domínio do Eureka dentro do Heroku
+    non-secure-port: 80
