@@ -1,47 +1,11 @@
-server:
-  port: 8082
-  servlet:
-    context-path: '/ead-authuser/'
-
 spring:
   application:
     name: ead-authuser-service
-
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  jmx:
-    enabled: false
-  datasource:
-    username: postgres
-    password: T@ider1398
-    url: jdbc:postgresql://localhost:5432/ead-authuser
-  output:
-    ansi:
-      enabled: Always
-
-#Configuração do Log para TRACE, visto que INFO é o default
-logging:
-  level:
-    com.ead: TRACE
-    root: INFO #Seta o padrão para todo o framework como INFO, DEBUG, etc
-    org.springframework.web: DEBUG
-    org.hibernate: INFO
-
-#definição do endereço de Course para comunicação síncrona entre os microserviços, utilizando o id criado no Eureka server
-ead:
-  api:
-    url:
-      course: 'http://ead-course-service/ead-course'
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: 'http://localhost:8761/eureka'
-  instance:
-    hostname: localhost
+  config:
+    import: 'configserver:'
+  cloud:
+    config:
+      discovery:
+        serviceId: ead-config-server
+      username: configserver
+      password: 'ead123cs'

@@ -1,23 +1,21 @@
 package com.ead.course.controllers;
 
-import com.ead.course.clients.AuthUserClient;
-import com.ead.course.dto.SubscritionDto;
-import com.ead.course.dto.UserDto;
+import com.ead.course.dtos.SubscritionDto;
 import com.ead.course.enums.UserStatus;
 import com.ead.course.models.CourseModel;
-import com.ead.course.models.CourseUserModel;
+import com.ead.course.models.UserModel;
 import com.ead.course.services.CourseService;
-import com.ead.course.services.CourseUserService;
+import com.ead.course.services.UserService;
+import com.ead.course.specifications.SpecificationTemplate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -29,55 +27,42 @@ import java.util.UUID;
 public class CourseUserController {
 
     @Autowired
-    AuthUserClient authUserClient;
-
-    @Autowired
     CourseService courseService;
 
     @Autowired
-    CourseUserService courseUserService;
+    UserService userService;
 
+    @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     @GetMapping("/courses/{courseId}/users")
-    public ResponseEntity<Page<UserDto>> getAllUsersByCourse(@PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
-                                                             @PathVariable(value = "courseId") UUID courseId){
-        return ResponseEntity.status(HttpStatus.OK).body(authUserClient.getAllUsersByCourse(courseId, pageable));
+    public ResponseEntity<Object> getAllUsersByCourse(SpecificationTemplate.UserSpec spec,
+                                                      @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
+                                                      @PathVariable(value = "courseId") UUID courseId){
+        Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
+        if(!courseModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course Not Found.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable));
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @PostMapping("/courses/{courseId}/users/subscription")
     public ResponseEntity<Object> saveSubscriptionUserInCourse(@PathVariable(value = "courseId") UUID courseId,
                                                                @RequestBody @Valid SubscritionDto subscritionDto){
-
-        ResponseEntity<UserDto> responseUser;
         Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
         if(!courseModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found!");
         }
-        if(courseUserService.existsByCourseAndUserId(courseModelOptional.get(), subscritionDto.getUserId())){
+        if(courseService.existsByCourseAndUser(courseId, subscritionDto.getUserId())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: subscription already exists!");
         }
-
-        try{
-            responseUser = authUserClient.getOneUserById(subscritionDto.getUserId());
-            if(responseUser.getBody().getUserStatus().equals(UserStatus.BLOCKED)){
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("User is blocked!");
-            }
+        Optional<UserModel> userModelOptional = userService.findById(subscritionDto.getUserId());
+        if(!userModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         }
-        catch (HttpStatusCodeException e){
-            if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)){
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("User does not exists!");
-            }
+        if (userModelOptional.get().getUserStatus().equals(UserStatus.BLOCKED.toString())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User is blocked!");
         }
-        CourseUserModel courseUserModel = courseUserService.saveAndSendSubscriptionUserInCourse(courseModelOptional.get().convertToCourseUserModel(subscritionDto.getUserId()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(courseUserModel);
-    }
-
-    @DeleteMapping("/courses/users/{userId}")
-    public ResponseEntity<Object> deleteCourseUserByUser(@PathVariable(value = "userId") UUID userId){
-        if(courseUserService.existsByUserId(userId)){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CourseUser not found!");
-        }
-        courseUserService.deleteCourseUserByUser(userId);
-        return ResponseEntity.status(HttpStatus.OK).body("CourseUserdeleted successfully!");
+        courseService.saveSubscriptionUserInCourseAndSendNotification(courseModelOptional.get(), userModelOptional.get());
+        return ResponseEntity.status(HttpStatus.CREATED).body("Subscription created successfully!");
     }
 }

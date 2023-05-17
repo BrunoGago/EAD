@@ -8,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -66,13 +64,10 @@ public class CourseModel implements Serializable {
     //@OnDelete(action = OnDeleteAction.CASCADE)//A deleção é feita pelo banco de dados, assim, o BD vai deletar os módules que estão associados com um curso
     private Set<ModuleModel> modules;
 
-    //Definição de API Composition com relacionamento entre as classes
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    private Set<CourseUserModel> coursesUsers;
-
-    public CourseUserModel convertToCourseUserModel(UUID userId){
-        return new CourseUserModel(null, this, userId);
-    }
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(    name = "TB_COURSES_USERS",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<UserModel> users;
 }

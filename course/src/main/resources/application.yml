@@ -6,6 +6,14 @@ server:
 spring:
   application:
     name: ead-course-service
+  config:
+    import: 'optional:configserver:'
+  cloud:
+    config:
+      discovery:
+        serviceId: ead-config-server
+      username: configserver
+      password: 'ead123cs'
 
   jpa:
     show-sql: true
@@ -14,19 +22,33 @@ spring:
     properties:
       hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-
   jmx:
     enabled: false
   datasource:
     username: postgres
     password: T@ider1398
-    url: jdbc:postgresql://localhost:5432/ead-course
+    url: jdbc:postgresql://localhost:5432/ead-course-v2
+#RabbitMQ configuração
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
 
 #definição do endereço de AuthUser para comunicação síncrona entre os microserviços
 ead:
   api:
     url:
       authuser: 'http://ead-authuser-service/ead-authuser' #passei o ID do Eureka e o context-path
+  broker:
+    exchange:
+      userEventExchange: ead.userevent #definição do exchange de authuser
+      notificationCommandExchange: ead.notificationcommand #exchange para comunicação com notification do tipo TOPIC
+    queue: #fila que course vai estar "escutando" quando o publisher enviar para o exchange conectado a ele
+      userEventQueue:
+        name: ead.userevent.ms.course
+    key:
+      notificationCommandKey: ms.notification #nome da routingKey
 
 eureka:
   client:
